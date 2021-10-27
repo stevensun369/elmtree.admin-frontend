@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+
+import { BrowserRouter as Router, Route } from 'react-router-dom'
+
+import { getGrades } from './actions/adminActions'
+
+import LoginScreen from './screens/LoginScreen'
+import Index from './screens/Index'
+import HomeScreen from './screens/HomeScreen'
+import GradeScreen from './screens/GradeScreen'
 
 function App() {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getGrades())
+  }, [dispatch])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+      <Route path='/' component={Index} exact />
+      <Route path='/login' component={LoginScreen} exact />
+      <Route path='/admin' component={HomeScreen} exact />
+      <Route path='/admin/:gradeID' component={GradeScreen} />
+    </Router>
+  )
 }
 
-export default App;
+export default App
