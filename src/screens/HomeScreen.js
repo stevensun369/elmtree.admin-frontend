@@ -1,17 +1,16 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { getTeacherDelete } from '../actions/adminActions'
 
 import HeaderFull from '../components/HeaderFull'
 import ListItem from '../components/ListItem'
 import Loader from '../components/Loader'
 
-import { getGrades } from '../actions/adminActions'
-
 import styles from '../css/TeacherHomeScreen.module.css'
 
-const TeacherHomeScreen = () => {
-  // const dispatch = useDispatch()
+const TeacherHomeScreen = ({ history }) => {
+  const dispatch = useDispatch()
 
   const adminLogin = useSelector((state) => state.adminLogin)
   const { adminInfo } = adminLogin
@@ -19,9 +18,12 @@ const TeacherHomeScreen = () => {
   const adminGrades = useSelector((state) => state.adminGrades)
   const { grades, loading } = adminGrades
 
-  // useEffect(() => {
-  //   dispatch(getGrades())
-  // }, [dispatch])
+  useEffect(() => {
+    if (!adminLogin.adminInfo) {
+      history.push('/login')
+    }
+    dispatch(getTeacherDelete())
+  })
 
   return (
     <>
@@ -47,7 +49,7 @@ const TeacherHomeScreen = () => {
                       <>
                         {Object.keys(grades).map((gradeID) => (
                           <ListItem
-                            linkTo={`/admin/${grades[gradeID].gradeID}`}
+                            linkTo={`/admin/elevi/${grades[gradeID].gradeID}`}
                             key={grades[gradeID].gradeID}
                           >{`${grades[gradeID].gradeNumber}${grades[gradeID].gradeLetter}`}</ListItem>
                         ))}

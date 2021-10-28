@@ -16,7 +16,9 @@ const HeaderFullDesktop = () => {
             />
           </div>
           <div className={styles.headerLogoText}>
-            <div className={styles.headerLogoTextSpan}>elmtree</div>
+            <div className={styles.headerLogoTextSpan}>
+              elmtree - Administrator
+            </div>
           </div>
         </div>
 

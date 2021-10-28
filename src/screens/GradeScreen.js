@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import HeaderBack from '../components/HeaderBack'
 import ListItem from '../components/ListItem'
 import NotAuthorized from '../components/NotAuthorized'
-import Loader from '../components/Loader'
 
 import { getGradesStudents } from '../actions/adminActions'
 
@@ -16,7 +15,7 @@ const TeacherSubjectScreen = ({ match, history }) => {
   const adminLogin = useSelector((state) => state.adminLogin)
 
   const adminGrades = useSelector((state) => state.adminGrades)
-  const { grades, loading } = adminGrades
+  const { grades } = adminGrades
   const gradeID = match.params.gradeID
 
   const adminGradesStudents = useSelector(
@@ -31,14 +30,14 @@ const TeacherSubjectScreen = ({ match, history }) => {
 
   useEffect(() => {
     dispatch(getGradesStudents(gradeID))
-  }, [dispatch])
+  }, [dispatch, gradeID])
 
   let authorized = gradeProtect(gradeID, grades)
   if (authorized) {
     return (
       <>
-        {loading && <Loader />}
-        {grades && (
+        {/* {loading && <Loader />} */}
+        {grades.length !== 0 && (
           <>
             <HeaderBack backTo='/admin'>
               {grades[gradeID].gradeNumber +
@@ -51,7 +50,7 @@ const TeacherSubjectScreen = ({ match, history }) => {
                   <div className='list-divider'></div>
                   {students.map((item) => (
                     <ListItem
-                      linkTo={`/admin/${gradeID}/${item.studentID}`}
+                      linkTo={`/admin/elevi/${gradeID}/${item.studentID}`}
                       key={item.studentID}
                     >
                       {item.lastName} {item.dadInitials}{' '}

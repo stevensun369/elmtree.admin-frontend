@@ -51,6 +51,7 @@ header {
 .headerLogoTextSpan {
   position: absolute;
   top: 50%;
+  width: 50vw;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 

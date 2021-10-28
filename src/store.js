@@ -8,12 +8,28 @@ import {
   adminGradesReducer,
   adminLoginReducer,
   adminGradesStudentsReducer,
+  adminStudentReducer,
+  adminStudentSubjectDeleteReducer,
+  adminStudentSubjectAddReducer,
+  adminTeacherReducer,
+  adminTeacherSubjectDeleteReducer,
+  adminTeacherSubjectAddReducer,
 } from './reducers/adminReducers'
 
 const reducer = combineReducers({
   adminLogin: adminLoginReducer,
+
+  // student
   adminGrades: adminGradesReducer,
   adminGradesStudents: adminGradesStudentsReducer,
+  adminStudent: adminStudentReducer,
+  adminStudentSubjectDelete: adminStudentSubjectDeleteReducer,
+  adminStudentSubjectAdd: adminStudentSubjectAddReducer,
+
+  // teacher
+  adminTeacher: adminTeacherReducer,
+  adminTeacherSubjectDelete: adminTeacherSubjectDeleteReducer,
+  adminTeacherSubjectAdd: adminTeacherSubjectAddReducer,
 })
 
 const userTypeFromStorage = localStorage.getItem('userType')
