@@ -31,6 +31,15 @@ import {
   TEACHER_SUBJECT_ADD_SUCCESS,
   TEACHER_SUBJECT_ADD_FAIL,
   TEACHER_SUBJECT_ADD_DELETE,
+  TIMETABLE_REQUEST,
+  TIMETABLE_SUCCESS,
+  TIMETABLE_FAIL,
+  TIMETABLE_MODIFY_REQUEST,
+  TIMETABLE_MODIFY_SUCCESS,
+  TIMETABLE_MODIFY_FAIL,
+  TIMETABLE_UNASSIGN_REQUEST,
+  TIMETABLE_UNASSIGN_SUCCESS,
+  TIMETABLE_UNASSIGN_FAIL,
 } from '../constants/adminConstants'
 
 export const adminLoginReducer = (state = {}, action) => {
@@ -48,7 +57,7 @@ export const adminLoginReducer = (state = {}, action) => {
       return {
         loading: false,
         adminInfo: adminInfoDestructure,
-        adminToken: action.payload.token,
+        token: action.payload.token,
       }
     case LOGIN_FAIL:
       return { loading: false, error: action.payload }
@@ -218,6 +227,39 @@ export const adminTeacherSubjectAddReducer = (
 
     case TEACHER_SUBJECT_ADD_DELETE:
       return { loading: false, subjects: [] }
+    default:
+      return state
+  }
+}
+
+export const adminTimetableReducer = (
+  state = { loading: false, periods: {} },
+  action
+) => {
+  switch (action.type) {
+    case TIMETABLE_REQUEST:
+      return { loading: true, periods: {} }
+    case TIMETABLE_SUCCESS:
+      return {
+        loading: false,
+        periods: action.payload,
+      }
+    case TIMETABLE_FAIL:
+      return { loading: false, error: action.payload, periods: {} }
+
+    case TIMETABLE_MODIFY_REQUEST:
+      return { loading: true, ...state }
+    case TIMETABLE_MODIFY_SUCCESS:
+      return { loading: false, periods: action.payload }
+    case TIMETABLE_MODIFY_FAIL:
+      return { loading: false, error: action.payload, ...state }
+
+    case TIMETABLE_UNASSIGN_REQUEST:
+      return { loading: true, ...state }
+    case TIMETABLE_UNASSIGN_SUCCESS:
+      return { loading: false, periods: action.payload }
+    case TIMETABLE_UNASSIGN_FAIL:
+      return { loading: false, ...state }
     default:
       return state
   }

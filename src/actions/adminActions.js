@@ -32,6 +32,15 @@ import {
   TEACHER_SUBJECT_ADD_SUCCESS,
   TEACHER_SUBJECT_ADD_FAIL,
   TEACHER_SUBJECT_ADD_DELETE,
+  TIMETABLE_REQUEST,
+  TIMETABLE_SUCCESS,
+  TIMETABLE_FAIL,
+  TIMETABLE_MODIFY_REQUEST,
+  TIMETABLE_MODIFY_SUCCESS,
+  TIMETABLE_MODIFY_FAIL,
+  TIMETABLE_UNASSIGN_REQUEST,
+  TIMETABLE_UNASSIGN_SUCCESS,
+  TIMETABLE_UNASSIGN_FAIL,
 } from '../constants/adminConstants'
 import { apiURL } from '../utils/env'
 
@@ -381,3 +390,166 @@ export const addTeacherSubjectDelete = () => async (dispatch) => {
     type: TEACHER_SUBJECT_ADD_DELETE,
   })
 }
+
+export const getTimetable =
+  (gradeID) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: TIMETABLE_REQUEST,
+      })
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getState().adminLogin.token}`,
+        },
+      }
+
+      const { data } = await axios.get(
+        `${apiURL}/api/admin/timetable/${gradeID}`,
+        config
+      )
+
+      var days = [1, 2, 3, 4, 5]
+      var intervals = [
+        'pm1',
+        'pm2',
+        'pm3',
+        'pm4',
+        'pm5',
+        'pm6',
+        'pm7',
+      ]
+      var periods = {}
+
+      for (var dayKey in days) {
+        var day = days[dayKey]
+        periods[day] = {}
+        for (var intervalKey in intervals) {
+          var interval = intervals[intervalKey]
+          periods[day][interval] = []
+        }
+      }
+
+      for (var key in data) {
+        var period = data[key]
+        periods[period.day][period.interval].push(period)
+      }
+
+      dispatch({
+        type: TIMETABLE_SUCCESS,
+        payload: periods,
+      })
+    } catch (error) {
+      dispatch({
+        type: TIMETABLE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      })
+    }
+  }
+
+export const modifyPeriod =
+  (periodID, gradeID, room, subjectName) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: TIMETABLE_MODIFY_REQUEST,
+      })
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getState().adminLogin.token}`,
+        },
+      }
+
+      const grades = getState().adminGrades.grades
+      const subjectGradeNumber = grades[gradeID].gradeNumber
+      const subjectGradeLetter = grades[gradeID].gradeLetter
+
+      const { data } = await axios.put(
+        `${apiURL}/api/admin/timetable/${periodID}`,
+        {
+          room,
+          subjectName,
+          subjectGradeNumber: String(subjectGradeNumber),
+          subjectGradeLetter,
+        },
+        config
+      )
+
+      // getting the current periods
+      let periods = getState().adminTimetable.periods
+
+      // getting the data identifiers
+      const day = data.day
+      const interval = data.interval
+
+      for (var period in periods[day][interval]) {
+        if (
+          periods[day][interval][period].periodID === data.periodID
+        ) {
+          periods[day][interval][period] = data
+        }
+      }
+
+      dispatch({
+        type: TIMETABLE_MODIFY_SUCCESS,
+        payload: periods,
+      })
+    } catch (error) {
+      dispatch({
+        type: TIMETABLE_MODIFY_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      })
+    }
+  }
+
+export const unassignPeriod =
+  (periodID) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: TIMETABLE_UNASSIGN_REQUEST,
+      })
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getState().adminLogin.token}`,
+        },
+      }
+
+      const { data } = await axios.delete(
+        `${apiURL}/api/admin/timetable/${periodID}`,
+        config
+      )
+
+      // getting the current periods
+      let periods = getState().adminTimetable.periods
+
+      // getting the data identifiers
+      const day = data.day
+      const interval = data.interval
+
+      periods[day][interval] = data
+
+      dispatch({
+        type: TIMETABLE_UNASSIGN_SUCCESS,
+        payload: periods,
+      })
+    } catch (error) {
+      dispatch({
+        type: TIMETABLE_UNASSIGN_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      })
+    }
+  }

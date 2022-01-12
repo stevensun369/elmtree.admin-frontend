@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Form } from 'react-bootstrap'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { login } from '../actions/adminActions'
+import { getGrades, login } from '../actions/adminActions'
 
 import styles from '../css/LoginScreen.module.css'
 
@@ -20,8 +20,9 @@ const LoginScreen = ({ history }) => {
   useEffect(() => {
     if (adminLogin.adminInfo) {
       history.push('/')
+      dispatch(getGrades())
     }
-  }, [history, adminLogin.adminInfo])
+  }, [history, dispatch, adminLogin.adminInfo])
 
   const submitHandler = (e) => {
     e.preventDefault()
@@ -46,7 +47,7 @@ const LoginScreen = ({ history }) => {
           <>
             <Form onSubmit={submitHandler}>
               <input
-                type='text'
+                type='email'
                 className={styles.input}
                 placeholder='Email'
                 value={email}

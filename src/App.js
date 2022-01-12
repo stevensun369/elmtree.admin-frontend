@@ -9,6 +9,7 @@ import LoginScreen from './screens/LoginScreen'
 import Index from './screens/Index'
 import HomeScreen from './screens/HomeScreen'
 import GradeScreen from './screens/GradeScreen'
+import TimetableScreen from './screens/TimetableScreen'
 import StudentScreen from './screens/StudentScreen'
 import StudentSubjectDeleteScreen from './screens/StudentSubjectDeleteScreen'
 import StudentSubjectAddScreen from './screens/StudentSubjectAddScreen'
@@ -68,10 +69,16 @@ function App() {
         component={StudentSubjectDeleteScreen}
         exact
       />
-
       <Route
         path='/admin/elevi/:gradeID/:studentID/adauga'
         component={StudentSubjectAddScreen}
+        exact
+      />
+
+      {/* timetable */}
+      <Route
+        path='/admin/orar/:gradeID'
+        component={TimetableScreen}
         exact
       />
     </Router>

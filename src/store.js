@@ -14,6 +14,7 @@ import {
   adminTeacherReducer,
   adminTeacherSubjectDeleteReducer,
   adminTeacherSubjectAddReducer,
+  adminTimetableReducer,
 } from './reducers/adminReducers'
 
 const reducer = combineReducers({
@@ -25,6 +26,9 @@ const reducer = combineReducers({
   adminStudent: adminStudentReducer,
   adminStudentSubjectDelete: adminStudentSubjectDeleteReducer,
   adminStudentSubjectAdd: adminStudentSubjectAddReducer,
+
+  // timetable
+  adminTimetable: adminTimetableReducer,
 
   // teacher
   adminTeacher: adminTeacherReducer,
