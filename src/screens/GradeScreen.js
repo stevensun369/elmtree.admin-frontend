@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import HeaderBack from '../components/HeaderBack'
 import ListItem from '../components/ListItem'
 import NotAuthorized from '../components/NotAuthorized'
+import { Link } from 'react-router-dom'
 
 import { getGradesStudents } from '../actions/adminActions'
 
@@ -47,6 +48,13 @@ const TeacherSubjectScreen = ({ match, history }) => {
             <div className='main-container'>
               {students && (
                 <>
+                  <Link to={`/admin/orar/${gradeID}`}>
+                    <div className='toTimetable'>
+                      <span>&gt;&gt; către orar</span>
+                    </div>
+                  </Link>
+                  <div style={{ marginTop: '2vh' }}></div>
+
                   <div className='list-divider'></div>
                   {students.map((item) => (
                     <ListItem
